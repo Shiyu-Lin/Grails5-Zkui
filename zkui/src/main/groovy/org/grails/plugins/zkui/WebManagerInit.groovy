@@ -15,7 +15,10 @@ class WebManagerInit implements ServletContextAware {
                 updateURI = "/zkau";
             else
                 updateURI = org.zkoss.zk.ui.http.Utils.checkUpdateURI(updateURI, ATTR);
+            System.out.println("herere=========================================================")
+
             new WebManager(servletContext, updateURI);
+
         }
     }
 }

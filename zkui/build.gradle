@@ -57,6 +57,7 @@ dependencies {
     implementation "org.grails.plugins:async"
     implementation "org.grails.plugins:scaffolding:4.1.0"
     implementation "org.grails.plugins:gsp"
+    implementation "org.grails.plugins:converters:4.0.1"
     profile "org.grails.profiles:web-plugin"
     runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:3.3.4"
     testImplementation "io.micronaut:micronaut-inject-groovy"

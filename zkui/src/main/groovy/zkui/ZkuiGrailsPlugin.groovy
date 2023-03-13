@@ -1,17 +1,19 @@
 package zkui
 
 import grails.plugins.*
+import org.grails.gsp.GroovyPage
 import org.grails.plugins.zkui.ComposerHandler
 import org.grails.plugins.zkui.WebManagerInit
 import org.grails.plugins.zkui.ZkComponentBuilder
+import org.grails.plugins.zkui.ZkuiGrailsOpenSessionInViewFilter
 import org.grails.plugins.zkui.artefacts.composer.ComposerArtefactHandler
 import org.grails.plugins.zkui.artefacts.vm.ViewModelArtefactHandler
 import org.grails.plugins.zkui.composer.BindComposer
 import org.grails.plugins.zkui.metaclass.RedirectDynamicMethod
 import org.grails.plugins.zkui.util.ComponentErrorRendererUtil
 import org.grails.plugins.zkui.util.UriUtil
-import org.grails.web.servlet.mvc.GrailsDispatcherServlet
-import org.springframework.boot.web.servlet.ServletRegistrationBean
+import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.context.ApplicationContext
 import org.springframework.web.context.request.RequestContextHolder as RCH
 import org.zkoss.lang.Library
 import org.zkoss.zk.au.http.DHtmlUpdateServlet
@@ -30,11 +32,23 @@ import grails.util.TypeConvertingMap
 
 class ZkuiGrailsPlugin extends Plugin {
 
+
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "5.3.2 > *"
+
+    def profiles = ['web']
+
+    List loadAfter = ['core', 'hibernate', 'controllers']
+
+    def watchedResources = [
+            "file:./grails-app/composers/**/*Composer.groovy",
+            "file:./plugins/*/grails-app/composers/**/*Composer.groovy",
+            "file:./grails-app/vms/**/*VM.groovy",
+            "file:./plugins/*/grails-app/vms/**/*VM.groovy"
+    ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-        "grails-app/views/error.gsp"
+            "grails-app/views/error.gsp"
     ]
 
     // TODO Fill in these fields
@@ -44,12 +58,10 @@ class ZkuiGrailsPlugin extends Plugin {
     def description = '''\
 Brief summary/description of the plugin.
 '''
-    def profiles = ['web']
+
 
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/zkui"
-
-    def loadAfter = ['core', 'hibernate', 'controllers']
 
     // Extra (optional) plugin metadata
 
@@ -68,30 +80,40 @@ Brief summary/description of the plugin.
     // Online location of the plugin's browseable source code.
 //    def scm = [ url: "http://svn.codehaus.org/grails-plugins/" ]
 
-    static final String GOSIV_CLASS = "org.grails.plugins.zkui.ZkuiGrailsOpenSessionInViewFilter"
+//    static final String GOSIV_CLASS = "org.grails.plugins.zkui.ZkuiGrailsOpenSessionInViewFilter"
 
-    Closure doWithSpring = {{->
-        webManagerInit(WebManagerInit)
-        composerHandler(ComposerHandler)
-        zkComponentBuilder(ZkComponentBuilder)
-        "org.zkoss.bind.BindComposer"(BindComposer)
-        application.composerClasses.each { composerClass ->
-            "${composerClass.clazz.name}"(composerClass.clazz) { bean ->
-                bean.scope = "prototype"
-                bean.autowire = "byName"
+    @Override
+    Closure doWithSpring(){
+        {->
+            webManagerInit(WebManagerInit)
+            auEngine(DHtmlUpdateServlet)
+            if(manager?.hasGrailsPlugin("hibernate")){
+                GOSIVFilter(FilterRegistrationBean){
+                    filter = bean(ZkuiGrailsOpenSessionInViewFilter)
+                    urlPatterns = ["/zkau"]
+                }
             }
-        }
-        application.viewModelClasses.each { viewModelClass ->
-            "${viewModelClass.clazz.name}"(viewModelClass.clazz) { bean ->
-                bean.scope = "prototype"
-                bean.autowire = "byName"
+            composerHandler(ComposerHandler)
+            zkComponentBuilder(ZkComponentBuilder)
+            "org.zkoss.bind.BindComposer"(BindComposer)
+            application.composerClasses.each { composerClass ->
+                "${composerClass.clazz.name}"(composerClass.clazz) { bean ->
+                    bean.scope = "prototype"
+                    bean.autowire = "byName"
+                }
             }
+//            application.viewModelClasses.each { viewModelClass ->
+//                "${viewModelClass.clazz.name}"(viewModelClass.clazz) { bean ->
+//                    bean.scope = "prototype"
+//                    bean.autowire = "byName"
+//                }
+//            }
+
         }
-        }
-        grails()
     }
 
-    def doWithDynamicMethods = { ctx ->
+    void doWithDynamicMethods(ApplicationContext ctx){
+
         //Inject taglib namespace to Composer
         TagLibraryLookup gspTagLibraryLookup = ctx.getBean("gspTagLibraryLookup")
 
@@ -272,11 +294,15 @@ Brief summary/description of the plugin.
         }
     }
 
-    def doWithApplicationContext = { ctx ->
+    @Override
+    void doWithApplicationContext(){
         Library.setProperty("org.zkoss.web.servlet.http.URLEncoder", "org.grails.plugins.zkui.encodes.URLEncoder")
     }
 
-    def onChange = { event ->
+
+
+    @Override
+    void onChange(Map<String, Object> event){
         // watching is modified and reloaded. The event contains: event.source,
         // event.application, event.manager, event.ctx, and event.plugin.
         def artefactType = null
@@ -307,7 +333,8 @@ Brief summary/description of the plugin.
         event.manager?.getGrailsPlugin("zkui")?.doWithDynamicMethods(event.ctx)
     }
 
-    def onShutdown = { event ->
-        // TODO Implement code that is executed when the application shuts down (optional)
+    @Override
+    void onShutdown(Map<String, Object> event){
+        // do nothing
     }
 }
