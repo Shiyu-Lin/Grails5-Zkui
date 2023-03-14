@@ -12,9 +12,13 @@ import org.grails.plugins.zkui.composer.BindComposer
 import org.grails.plugins.zkui.metaclass.RedirectDynamicMethod
 import org.grails.plugins.zkui.util.ComponentErrorRendererUtil
 import org.grails.plugins.zkui.util.UriUtil
+import org.grails.web.pages.GroovyPagesServlet
+import org.grails.web.servlet.mvc.GrailsDispatcherServlet
 import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.request.RequestContextHolder as RCH
+import org.springframework.web.filter.DelegatingFilterProxy
 import org.zkoss.lang.Library
 import org.zkoss.zk.au.http.DHtmlUpdateServlet
 import org.zkoss.zk.ui.Component
@@ -86,7 +90,9 @@ Brief summary/description of the plugin.
     Closure doWithSpring(){
         {->
             webManagerInit(WebManagerInit)
-            auEngine(DHtmlUpdateServlet)
+            grails(GrailsDispatcherServlet)
+            gsp(ServletRegistrationBean, new GroovyPagesServlet(), "*.gsp")
+            auEngine(ServletRegistrationBean, new DHtmlUpdateServlet(), "/zkau/*")
             if(manager?.hasGrailsPlugin("hibernate")){
                 GOSIVFilter(FilterRegistrationBean){
                     filter = bean(ZkuiGrailsOpenSessionInViewFilter)
