@@ -12,18 +12,18 @@ import org.grails.plugins.zkui.composer.BindComposer
 import org.grails.plugins.zkui.metaclass.RedirectDynamicMethod
 import org.grails.plugins.zkui.util.ComponentErrorRendererUtil
 import org.grails.plugins.zkui.util.UriUtil
-import org.grails.web.pages.GroovyPagesServlet
-import org.grails.web.servlet.mvc.GrailsDispatcherServlet
 import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.boot.web.servlet.ServletRegistrationBean
-import org.springframework.context.ApplicationContext
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.web.context.request.RequestContextHolder as RCH
-import org.springframework.web.filter.DelegatingFilterProxy
 import org.zkoss.lang.Library
 import org.zkoss.zk.au.http.DHtmlUpdateServlet
 import org.zkoss.zk.ui.Component
 import org.zkoss.zk.ui.Executions
 import org.zkoss.zk.ui.Page
+import org.zkoss.zk.ui.http.DHtmlLayoutServlet
+import org.zkoss.zk.ui.http.HttpSessionListener
 import org.zkoss.zk.ui.select.Selectors
 import org.zkoss.zul.Messagebox
 import org.zkoss.zul.impl.InputElement
@@ -42,7 +42,8 @@ class ZkuiGrailsPlugin extends Plugin {
 
     def profiles = ['web']
 
-    List loadAfter = ['core', 'hibernate', 'controllers']
+    def loadAfter = ['core', 'controllers']
+
 
     def watchedResources = [
             "file:./grails-app/composers/**/*Composer.groovy",
@@ -84,15 +85,13 @@ Brief summary/description of the plugin.
     // Online location of the plugin's browseable source code.
 //    def scm = [ url: "http://svn.codehaus.org/grails-plugins/" ]
 
-//    static final String GOSIV_CLASS = "org.grails.plugins.zkui.ZkuiGrailsOpenSessionInViewFilter"
 
     @Override
     Closure doWithSpring(){
         {->
             webManagerInit(WebManagerInit)
-            grails(GrailsDispatcherServlet)
-            gsp(ServletRegistrationBean, new GroovyPagesServlet(), "*.gsp")
             auEngine(ServletRegistrationBean, new DHtmlUpdateServlet(), "/zkau/*")
+
             if(manager?.hasGrailsPlugin("hibernate")){
                 GOSIVFilter(FilterRegistrationBean){
                     filter = bean(ZkuiGrailsOpenSessionInViewFilter)
@@ -102,27 +101,38 @@ Brief summary/description of the plugin.
             composerHandler(ComposerHandler)
             zkComponentBuilder(ZkComponentBuilder)
             "org.zkoss.bind.BindComposer"(BindComposer)
-            application.composerClasses.each { composerClass ->
+
+            // Listener
+//            ZkSessionCleaner(HttpSessionListener){
+//                listener = bean(HttpSessionListener)
+//
+//            }
+
+            // Registering Composer Beans
+            grailsApplication.composerClasses.each { composerClass ->
                 "${composerClass.clazz.name}"(composerClass.clazz) { bean ->
                     bean.scope = "prototype"
                     bean.autowire = "byName"
                 }
             }
-//            application.viewModelClasses.each { viewModelClass ->
-//                "${viewModelClass.clazz.name}"(viewModelClass.clazz) { bean ->
-//                    bean.scope = "prototype"
-//                    bean.autowire = "byName"
-//                }
-//            }
+            // Registering ViewModel Beans for supporting MVVM
+            grailsApplication.viewModelClasses.each { viewModelClass ->
+                "${viewModelClass.clazz.name}"(viewModelClass.clazz) { bean ->
+                    bean.scope = "prototype"
+                    bean.autowire = "byName"
+                }
+            }
 
         }
     }
 
-    void doWithDynamicMethods(ApplicationContext ctx){
+    @Override
+    void doWithDynamicMethods(){
+
+        ConfigurableApplicationContext ctx = getApplicationContext()
 
         //Inject taglib namespace to Composer
         TagLibraryLookup gspTagLibraryLookup = ctx.getBean("gspTagLibraryLookup")
-
         CharSequence.metaClass.fixToZkUri = { String contextPath ->
             return UriUtil.fixToZk(delegate?.toString(), contextPath)
         }
@@ -183,7 +193,6 @@ Brief summary/description of the plugin.
                 return s
             }
         }
-
         def gDispatcher = gspTagLibraryLookup.lookupNamespaceDispatcher(GroovyPage.DEFAULT_NAMESPACE)
         org.zkoss.zk.ui.Component.metaClass.renderErrors = { Map args ->
             if (!args.bean) {
@@ -260,7 +269,7 @@ Brief summary/description of the plugin.
             for (namespace in gspTagLibraryLookup.availableNamespaces) {
                 def propName = GrailsClassUtils.getGetterName(namespace)
                 def namespaceDispatcher = gspTagLibraryLookup.lookupNamespaceDispatcher(namespace)
-                def composerClasses = application.composerClasses*.clazz
+                def composerClasses = grailsApplication.composerClasses*.clazz
                 for (Class composerClass in composerClasses) {
                     MetaClass mc = composerClass.metaClass
                     if (!mc.getMetaProperty(namespace)) {
@@ -268,7 +277,7 @@ Brief summary/description of the plugin.
                     }
                 }
             }
-            def composerClasses = application.composerClasses*.clazz
+            def composerClasses = grailsApplication.composerClasses*.clazz
             for (Class composerClass in composerClasses) {
                 MetaClass mc = composerClass.metaClass
                 mc.redirect = redirectObject

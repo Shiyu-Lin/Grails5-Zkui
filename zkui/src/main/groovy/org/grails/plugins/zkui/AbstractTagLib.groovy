@@ -26,10 +26,12 @@ abstract class AbstractTagLib implements ApplicationContextAware {
     ApplicationContext applicationContext
 
     void doTag(attrs, body, String tagName, String languageName = null) {
+        println(tagName + " ====================================")
         Class cls = ComponentUtil.getComponentClass(tagName, languageName)
         Component component = (Component) cls.newInstance()
         ComposerHandler composeHandle = applicationContext.getBean('composerHandler')
         composeHandle.handle(attrs.remove("apply"))
+        println (tagName + " parent: " + request.getAttribute('parents'))
         if (!request.getAttribute('parents')) {
             def parents = new LinkedList<Component>()
             parents.push(component)
@@ -41,7 +43,11 @@ abstract class AbstractTagLib implements ApplicationContextAware {
     }
 
     private def doChildComponent(ServletContext servletContext, HttpServletRequest request, Component component, attrs, body, ComposerHandler composeHandle, out) {
-        request['parents'].last.appendChild(component)
+        // Original code is appending inner-most child to the last element in the parents list which is the outter-most tag
+//        request['parents'].last.appendChild(component)
+        // inner-most child should be appended to the closest parent tag which is the first one in the parents list
+        request['parents'].first.appendChild(component)
+
         request['parents'].push(component)
         setAttrs(attrs, component, servletContext)
         composeHandle.doBeforeComposeChildren(component)
