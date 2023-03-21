@@ -58,7 +58,7 @@ class ZkuiGrailsPlugin extends Plugin {
 
     // TODO Fill in these fields
     def title = "Zkui" // Headline display name of the plugin
-    def author = "Your name"
+    def author = ""
     def authorEmail = ""
     def description = '''\
 Brief summary/description of the plugin.
@@ -66,7 +66,7 @@ Brief summary/description of the plugin.
 
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/zkui"
+//    def documentation = "http://grails.org/plugin/zkui"
 
     // Extra (optional) plugin metadata
 
@@ -98,14 +98,20 @@ Brief summary/description of the plugin.
                     urlPatterns = ["/zkau"]
                 }
             }
-            composerHandler(ComposerHandler)
-            zkComponentBuilder(ZkComponentBuilder)
-            "org.zkoss.bind.BindComposer"(BindComposer)
+            composerHandler(ComposerHandler){ bean ->
+                bean.scope = "prototype"
+            }
+            zkComponentBuilder(ZkComponentBuilder){ bean ->
+                bean.scope = "prototype"
+            }
+            "org.zkoss.bind.BindComposer"(BindComposer){ bean ->
+                bean.scope = "prototype"
+            }
 
             // Listener
 //            ZkSessionCleaner(HttpSessionListener){
 //                listener = bean(HttpSessionListener)
-//
+//                order = Ordered.HIGHEST_PRECEDENCE
 //            }
 
             // Registering Composer Beans

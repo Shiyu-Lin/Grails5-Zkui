@@ -88,6 +88,59 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-support:4.0.0"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.0.0"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.0.0"
+    def zkVersion = "9.6.3"
+    implementation ("org.zkoss.zk:zhtml:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zk:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zkbind:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zkplus:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zul:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.common:zcommon:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.common:zel:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.common:zweb:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.theme:sapphire:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.theme:silvertail:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zkex:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zkmax:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
+    implementation ("org.zkoss.zk:zml:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
 }
 
 bootRun {
