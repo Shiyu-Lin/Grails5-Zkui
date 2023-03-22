@@ -17,7 +17,7 @@
 
 <z:window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('zkMvvmViewModel')">
 
-    <z:intbox value="@bind(vm.index)"/>
+    <z:intbox value="@bind(vm.index) @validator(vm.rangeValidator)"/>
 
     <z:doublebox value="@bind(vm.price)"/>
 

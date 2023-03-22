@@ -1,5 +1,8 @@
+import org.zkoss.bind.ValidationContext
+import org.zkoss.bind.Validator
 import org.zkoss.bind.annotation.Command
 import org.zkoss.bind.annotation.NotifyChange
+import org.zkoss.bind.validator.AbstractValidator
 
 class zkMvvmViewModel{
     private int index
@@ -34,6 +37,19 @@ class zkMvvmViewModel{
         price -= 5.0
     }
 
+
+    public Validator getRangeValidator(){
+        return new AbstractValidator() {
+            @Override
+            void validate(ValidationContext ctx) {
+                Integer val = (Integer) ctx.getProperty().getValue()
+                if (val < 200) {
+                    println("invalid")
+//                    addInvalidMessage(ctx, "intBox", "invalid input")
+                }
+            }
+        }
+    }
 
 
 
