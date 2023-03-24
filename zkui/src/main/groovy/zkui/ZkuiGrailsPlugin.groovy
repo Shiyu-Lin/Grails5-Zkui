@@ -18,6 +18,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.web.context.request.RequestContextHolder as RCH
 import org.zkoss.lang.Library
+import org.zkoss.zk.au.http.DHtmlResourceServlet
 import org.zkoss.zk.au.http.DHtmlUpdateServlet
 import org.zkoss.zk.ui.Component
 import org.zkoss.zk.ui.Executions
@@ -91,6 +92,7 @@ Brief summary/description of the plugin.
         {->
             webManagerInit(WebManagerInit)
             auEngine(ServletRegistrationBean, new DHtmlUpdateServlet(), "/zkau/*")
+            zkResource(ServletRegistrationBean, new DHtmlResourceServlet(), "/zkau/*")
 
             if(manager?.hasGrailsPlugin("hibernate")){
                 GOSIVFilter(FilterRegistrationBean){

@@ -8,6 +8,7 @@ class zkMvvmViewModel{
     private int index
     private double price
     private List<Item> itemList = [new Item("Item 1", "Description 1"), new Item("Item 2", "Description 2")]
+    private boolean shouldDisplayInfo = false
 
     int getIndex() {
         return index
@@ -27,6 +28,14 @@ class zkMvvmViewModel{
 
     List<Item> getItemList() {
         return itemList
+    }
+
+    boolean getShouldDisplayInfo() {
+        return shouldDisplayInfo
+    }
+
+    void setShouldDisplayInfo(boolean shouldDisplayInfo) {
+        this.shouldDisplayInfo = shouldDisplayInfo
     }
 
     @Command
@@ -49,7 +58,7 @@ class zkMvvmViewModel{
                 Integer val = (Integer) ctx.getProperty().getValue()
                 if (val < 200) {
 //                    println("invalid")
-//                    addInvalidMessage(ctx, "intBox1", "invalid input")
+                    addInvalidMessage(ctx, "intBox1", "invalid input")
                 }
             }
         }

@@ -18,7 +18,7 @@
 <z:window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('zkMvvmViewModel')" validationMessages="@id('vmsgs')">
 
     <z:intbox value="@bind(vm.index) @validator(vm.rangeValidator)"/>
-
+    <z:label id="l1" value="@bind(vmsgs['intBox1'])"/>
     <z:doublebox value="@bind(vm.price)"/>
 
     <z:toolbar>
@@ -63,7 +63,7 @@
     </z:grid>
 
 
-    <z:grid width="400px" model="@bind(vm.itemList) @template('model1')">
+    <z:grid width="400px" model="@bind(vm.itemList) @template(vm.shouldDisplayInfo ? 'model1' : 'model2')">
         <z:columns>
             <z:column label="Name"/>
             <z:column label="Description"/>
