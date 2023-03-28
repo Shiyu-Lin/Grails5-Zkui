@@ -9,6 +9,7 @@ class zkMvvmViewModel{
     private double price
     private List<Item> itemList = [new Item("Item 1", "Description 1"), new Item("Item 2", "Description 2")]
     private boolean shouldDisplayInfo = false
+    private boolean shouldDisplayPopup = false
 
     int getIndex() {
         return index
@@ -38,6 +39,14 @@ class zkMvvmViewModel{
         this.shouldDisplayInfo = shouldDisplayInfo
     }
 
+    boolean getShouldDisplayPopup() {
+        return shouldDisplayPopup
+    }
+
+    void setShouldDisplayPopup(boolean shouldDisplayPopup) {
+        this.shouldDisplayPopup = shouldDisplayPopup
+    }
+
     @Command
     @NotifyChange("index")
     void incrementIndexByTen(){
@@ -50,6 +59,11 @@ class zkMvvmViewModel{
         price -= 5.0
     }
 
+    @Command
+    @NotifyChange("shouldDisplayPopup")
+    void popup(){
+        shouldDisplayPopup = !shouldDisplayPopup
+    }
 
     public Validator getRangeValidator(){
         return new AbstractValidator() {

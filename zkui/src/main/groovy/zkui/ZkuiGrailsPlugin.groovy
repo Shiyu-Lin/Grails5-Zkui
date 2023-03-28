@@ -16,6 +16,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.core.Ordered
 import org.springframework.web.context.request.RequestContextHolder as RCH
 import org.zkoss.lang.Library
 import org.zkoss.zk.au.http.DHtmlResourceServlet
@@ -25,6 +26,7 @@ import org.zkoss.zk.ui.Executions
 import org.zkoss.zk.ui.Page
 import org.zkoss.zk.ui.http.DHtmlLayoutServlet
 import org.zkoss.zk.ui.http.HttpSessionListener
+import org.zkoss.zk.ui.http.HttpSessionListener23
 import org.zkoss.zk.ui.select.Selectors
 import org.zkoss.zul.Messagebox
 import org.zkoss.zul.impl.InputElement
@@ -36,7 +38,6 @@ import org.grails.taglib.TagLibraryLookup
 import grails.util.TypeConvertingMap
 
 class ZkuiGrailsPlugin extends Plugin {
-
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "5.3.2 > *"
@@ -111,10 +112,11 @@ Brief summary/description of the plugin.
             }
 
             // Listener
-//            ZkSessionCleaner(HttpSessionListener){
-//                listener = bean(HttpSessionListener)
+//            ZkSessionCleaner(ServletListenerRegistrationBean) {
+//                listener = bean(HttpSessionListener23)
 //                order = Ordered.HIGHEST_PRECEDENCE
 //            }
+
 
             // Registering Composer Beans
             grailsApplication.composerClasses.each { composerClass ->
@@ -206,10 +208,10 @@ Brief summary/description of the plugin.
             if (!args.bean) {
                 throw new IllegalArgumentException("[bean] attribute must be specified!")
             }
-            if (!application.isArtefactOfType(DomainClassArtefactHandler.TYPE, args.bean.class)) {
+            if (!grailsApplication.isArtefactOfType(DomainClassArtefactHandler.TYPE, args.bean.class)) {
                 throw new IllegalArgumentException("[bean] attribute must be Domain class!")
             }
-            def domainClass = application.getDomainClass(args.bean.class.name)
+            def domainClass = grailsApplication.getDomainClass(args.bean.class.name)
             args.bean.errors.fieldErrors.each {
                 def p = domainClass.getPropertyByName(it.field)
                 def name
@@ -278,7 +280,7 @@ Brief summary/description of the plugin.
                 def propName = GrailsClassUtils.getGetterName(namespace)
                 def namespaceDispatcher = gspTagLibraryLookup.lookupNamespaceDispatcher(namespace)
                 def composerClasses = grailsApplication.composerClasses*.clazz
-                for (Class composerClass in composerClasses) {
+                for (Class composerClass in (composerClasses as List<Class>)) {
                     MetaClass mc = composerClass.metaClass
                     if (!mc.getMetaProperty(namespace)) {
                         mc."$propName" = { namespaceDispatcher }
@@ -286,7 +288,7 @@ Brief summary/description of the plugin.
                 }
             }
             def composerClasses = grailsApplication.composerClasses*.clazz
-            for (Class composerClass in composerClasses) {
+            for (Class composerClass in (composerClasses as List<Class>)) {
                 MetaClass mc = composerClass.metaClass
                 mc.redirect = redirectObject
                 mc.getSession = sessionObject
@@ -329,31 +331,30 @@ Brief summary/description of the plugin.
         // watching is modified and reloaded. The event contains: event.source,
         // event.application, event.manager, event.ctx, and event.plugin.
         def artefactType = null
-        if (application.isArtefactOfType(ComposerArtefactHandler.TYPE, event.source)) {
+        if (grailsApplication.isArtefactOfType(ComposerArtefactHandler.TYPE, event.source.metaClass.class)) {
             artefactType = ComposerArtefactHandler.TYPE
-        } else if (application.isArtefactOfType(ViewModelArtefactHandler.TYPE, event.source)) {
+        } else if (grailsApplication.isArtefactOfType(ViewModelArtefactHandler.TYPE, event.source.metaClass.class)) {
             artefactType = ViewModelArtefactHandler.TYPE
         }
         if (artefactType) {
             def context = event.ctx
             if (!context) {
-                if (log.isDebugEnabled())
-                    log.debug("Application context not found. Can't reload")
+                println("Application context not found. Can't reload")
                 return
             }
-            def artefactClass = application.addArtefact(artefactType, event.source)
+            def artefactClass = grailsApplication.addArtefact(artefactType, event.source.metaClass.class)
             def artefactBeanName = artefactClass.clazz.name
 
-            def beans = beans {
+            beans {
                 "${artefactBeanName}"(artefactClass.clazz) { bean ->
                     bean.scope = "prototype"
                     bean.autowire = "byName"
                 }
             }
-            beans.registerBeans(event.ctx)
+//            beans.registerBeans(event.ctx)
         }
 
-        event.manager?.getGrailsPlugin("zkui")?.doWithDynamicMethods(event.ctx)
+//        event.manager?.getGrailsPlugin("zkui")?.doWithDynamicMethods(event.ctx)
     }
 
     @Override

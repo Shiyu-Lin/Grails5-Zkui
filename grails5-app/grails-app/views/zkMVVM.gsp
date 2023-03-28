@@ -33,6 +33,7 @@
 %{--    <!-- other components -->--}%
 
     <z:grid width="300px" mold="paging" pageSize="4">
+        <g:render template="someTags"/>
         <z:columns>
             <z:column label="Left"/>
             <z:column label="Right"/>
@@ -60,6 +61,10 @@
                 <z:label value="Item 7.1"/><z:label value="Item 7.2"/>
             </z:row>
         </z:rows>
+        <z:foot>
+            <z:footer>footer 1</z:footer>
+            <z:footer>footer 2</z:footer>
+        </z:foot>
     </z:grid>
 
 
@@ -67,11 +72,13 @@
         <z:columns>
             <z:column label="Name"/>
             <z:column label="Description"/>
+            <z:column label="Actions"/>
         </z:columns>
         <z:template name="model1">
             <row>
                 <label value="@bind(each.name)"/>
                 <label value="@bind(each.description)"/>
+                <button label="popup" onClick="@command('popup')"/>
             </row>
         </z:template>
 
@@ -79,12 +86,21 @@
             <row>
                 <label value="label 1"/>
                 <label value="label 2"/>
+                <button label="popup" onClick="@command('popup')"/>
             </row>
         </z:template>
     </z:grid>
 
+    <z:window id="popup" closable="true" mode="modal" visible="@load(vm.shouldDisplayPopup)" border="normal" position="center">
+        <z:label value="Here is the content of popup"/>
+        <z:space/>
+        <z:button label="close" onClick="@command('popup')"/>
+    </z:window>
+
 
 </z:window>
+
+
 
 
 
