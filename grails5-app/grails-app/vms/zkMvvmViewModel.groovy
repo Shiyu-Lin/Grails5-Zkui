@@ -123,8 +123,6 @@ class zkMvvmViewModel{
         }
     }
 
-
-
     static class Item{
         String name
         String description
