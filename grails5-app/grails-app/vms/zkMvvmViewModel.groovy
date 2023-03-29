@@ -21,7 +21,6 @@ class zkMvvmViewModel{
     @Wire("#column1_grid2")
     Column column1_grid2
 
-
     @AfterCompose
     void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
         Selectors.wireComponents(view, this, false)
@@ -116,7 +115,6 @@ class zkMvvmViewModel{
             void validate(ValidationContext ctx) {
                 Integer val = (Integer) ctx.getProperty().getValue()
                 if (val < 200) {
-//                    println("invalid")
                     println(grid2.isVflex())
                     println(column1_grid2.getParent())
                     addInvalidMessage(ctx, "intBox1", "invalid input")
