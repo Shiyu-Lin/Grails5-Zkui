@@ -25,6 +25,7 @@ class WebManagerInit implements ServletContextAware, ApplicationContextAware{
             WebManager webmanCreated = new WebManager(servletContext, updateURI)
 
 
+            println(webmanCreated.getWebApp().getAppName())
 
             // Logging zk WebManager just to confirm it is indeed initialized
             println(webmanCreated)
@@ -43,10 +44,6 @@ class WebManagerInit implements ServletContextAware, ApplicationContextAware{
                 println(entry.getKey() + "======" + entry.getValue())
             }
             println()
-
-
-
-
 
         }
     }

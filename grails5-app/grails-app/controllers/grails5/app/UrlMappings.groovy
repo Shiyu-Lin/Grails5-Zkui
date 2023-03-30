@@ -9,6 +9,7 @@ class UrlMappings {
                 // apply constraints here
             }
         }
+        "/accessibility"(view:"/accessibilityFeatures")
         "/viewModel"(view:"/zkMVVM")
         "/"(view:"/index")
         "500"(view:'/error')
