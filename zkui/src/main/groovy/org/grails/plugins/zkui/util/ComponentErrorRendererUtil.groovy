@@ -6,7 +6,7 @@ import org.zkoss.zk.ui.Component
 class ComponentErrorRendererUtil{
    
    public void addRenderMapAsErrors(){
-      org.zkoss.zk.ui.Component.metaClass.renderMapAsErrors = {Map args->
+      Component.metaClass.renderMapAsErrors = {Map args->
          for(_error in args.bean.errors){
             def name = _error.field
 

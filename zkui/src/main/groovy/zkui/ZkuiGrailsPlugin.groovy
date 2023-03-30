@@ -22,13 +22,17 @@ import org.zkoss.lang.Library
 import org.zkoss.zk.au.http.DHtmlResourceServlet
 import org.zkoss.zk.au.http.DHtmlUpdateServlet
 import org.zkoss.zk.ui.Component
+import org.zkoss.zk.ui.Execution
 import org.zkoss.zk.ui.Executions
 import org.zkoss.zk.ui.Page
-import org.zkoss.zk.ui.http.DHtmlLayoutServlet
+import org.zkoss.zk.ui.Session
 import org.zkoss.zk.ui.http.HttpSessionListener
-import org.zkoss.zk.ui.http.HttpSessionListener23
 import org.zkoss.zk.ui.select.Selectors
+import org.zkoss.zul.Checkbox
+import org.zkoss.zul.Combobox
+import org.zkoss.zul.Listbox
 import org.zkoss.zul.Messagebox
+import org.zkoss.zul.Radiogroup
 import org.zkoss.zul.impl.InputElement
 import org.grails.core.artefact.DomainClassArtefactHandler
 import grails.util.GrailsClassUtils
@@ -113,10 +117,9 @@ Brief summary/description of the plugin.
 
             // Listener
 //            ZkSessionCleaner(ServletListenerRegistrationBean) {
-//                listener = bean(HttpSessionListener23)
+//                listener = bean(HttpSessionListener)
 //                order = Ordered.HIGHEST_PRECEDENCE
 //            }
-
 
             // Registering Composer Beans
             grailsApplication.composerClasses.each { composerClass ->
@@ -147,36 +150,36 @@ Brief summary/description of the plugin.
             return UriUtil.fixToZk(delegate?.toString(), contextPath)
         }
 
-        org.zkoss.zk.ui.Component.metaClass.appendChild = { Closure closure ->
+        Component.metaClass.appendChild = { Closure closure ->
             def builder = ctx.getBean('zkComponentBuilder')
             closure.resolveStrategy = Closure.DELEGATE_FIRST
             builder.build(delegate, closure)
         }
-        org.zkoss.zk.ui.Component.metaClass.leftShift = { Object value ->
+        Component.metaClass.leftShift = { Object value ->
             delegate.appendChild(value)
         }
-        org.zkoss.zk.ui.Component.metaClass.select = { String query ->
+        Component.metaClass.select = { String query ->
             return Selectors.find((Component) delegate, query)
         }
-        org.zkoss.zk.ui.Page.metaClass.select = { String query ->
+        Page.metaClass.select = { String query ->
             return Selectors.find((Page) delegate, query)
         }
-        org.zkoss.zk.ui.Component.metaClass.addEventListener = { String eventName, Closure listenerClosure ->
+        Component.metaClass.addEventListener = { String eventName, Closure listenerClosure ->
             return delegate.addEventListener(eventName, listenerClosure as org.zkoss.zk.ui.event.EventListener)
         }
-        org.zkoss.zk.ui.Component.metaClass.getParams = {
+        Component.metaClass.getParams = {
             return delegate.select("*").inject([:]) { s, c ->
                 if (!c.metaClass.respondsTo(c, 'getName')) return s
                 if (c.name == null) return s
                 def e = s.get(c.name)
                 def value
-                if (c instanceof org.zkoss.zul.Combobox) {
+                if (c instanceof Combobox) {
                     value = c.selectedItem?.value
-                } else if (c instanceof org.zkoss.zul.Checkbox) {
+                } else if (c instanceof Checkbox) {
                     value = c.value ?: c.isChecked()
-                } else if (c instanceof org.zkoss.zul.Listbox) {
+                } else if (c instanceof Listbox) {
                     value = c.getSelectedItems()?.value
-                } else if (c instanceof org.zkoss.zul.Radiogroup) {
+                } else if (c instanceof Radiogroup) {
                     return s
                 } else if (c.metaClass.respondsTo(c, 'getValue')) {
                     value = c.value
@@ -204,7 +207,7 @@ Brief summary/description of the plugin.
             }
         }
         def gDispatcher = gspTagLibraryLookup.lookupNamespaceDispatcher(GroovyPage.DEFAULT_NAMESPACE)
-        org.zkoss.zk.ui.Component.metaClass.renderErrors = { Map args ->
+        Component.metaClass.renderErrors = { Map args ->
             if (!args.bean) {
                 throw new IllegalArgumentException("[bean] attribute must be specified!")
             }
@@ -234,19 +237,19 @@ Brief summary/description of the plugin.
 
         errorRendererUtil.addRenderMapAsErrors()
 
-        org.zkoss.zk.ui.Session.metaClass.getAt = { String name ->
+        Session.metaClass.getAt = { String name ->
             delegate.getAttribute(name)
         }
 
-        org.zkoss.zk.ui.Session.metaClass.putAt = { String name, value ->
+        Session.metaClass.putAt = { String name, value ->
             delegate.setAttribute(name, value)
         }
 
-        org.zkoss.zk.ui.Execution.metaClass.getAt = { String name ->
+        Execution.metaClass.getAt = { String name ->
             delegate.getAttribute(name)
         }
 
-        org.zkoss.zk.ui.Execution.metaClass.putAt = { String name, value ->
+        Execution.metaClass.putAt = { String name, value ->
             delegate.setAttribute(name, value)
         }
 
