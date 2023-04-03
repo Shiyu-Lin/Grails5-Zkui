@@ -33,7 +33,6 @@
         <z:label value="ViewModel yea!!!"/>
     </z:div>
 
-
 %{--    Feature: ZK 9+ compiles the pagination buttons differently (with html's accessibility attributes)--}%
     <z:grid width="300px" mold="paging" pageSize="4">
         <g:render template="someTags"/>
@@ -101,7 +100,6 @@
         <z:space/>
         <z:button label="close" onClick="@command('popup')"/>
     </z:window>
-
 %{--    Grails iteration--}%
     <g:each in="${[1,2,3]}" var="num">
         <p>Number ${num}</p>

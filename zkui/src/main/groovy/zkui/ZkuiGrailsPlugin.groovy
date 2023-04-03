@@ -48,7 +48,7 @@ class ZkuiGrailsPlugin extends Plugin {
 
     def profiles = ['web']
 
-    def loadAfter = ['core', 'controllers']
+    def loadAfter = ['core', 'hibernate', 'controllers']
 
 
     def watchedResources = [

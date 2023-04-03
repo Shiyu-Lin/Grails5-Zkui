@@ -68,7 +68,12 @@ project is Grails 2.2.4 and ZK 6.5.4.
     when it tries to initialize ZK's WebManager. The WebManager is successfully initialized, but it might invoked some other initialization process(my guess :)). However, this error seems 
     not to impact the functionality of the plugin and I could not get rid of it :( . If it ever causes the plugin to not work or you found a solution to resolve it, please let me know!
     
+    "Execution failed for task ':zkui:jar'. > Unable to delete file '...\zkui\build\libs\zkui-0.1-plain.jar'". What I did was to remove "build" folder from zkui and rerun, this should resolve
+    the issue.
+
     Something related to message code "....message code not found, etc.", seems to appear randomly, could not figure out why it happens yet.
+
+
 
 ## References
 https://docs.grails.org/latest/guide/plugins.html

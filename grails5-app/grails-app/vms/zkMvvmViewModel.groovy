@@ -12,6 +12,7 @@ import org.zkoss.zk.ui.select.Selectors
 import org.zkoss.zk.ui.select.annotation.Wire
 import org.zkoss.zul.Column
 import org.zkoss.zul.Grid
+import org.zkoss.zul.Label
 
 class zkMvvmViewModel{
 
