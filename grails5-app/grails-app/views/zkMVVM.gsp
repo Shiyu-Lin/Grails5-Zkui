@@ -132,6 +132,10 @@
 
     <z:label value="@bind(vm.message)"/>
 
+    <z:space/>
+
+    <z:label value="@load(vm.creationDate) @converter(vm.dateConverter, format='yyyymmdd')"/>
+
 
 </z:window>
 

@@ -1,3 +1,5 @@
+import org.zkoss.bind.BindContext
+import org.zkoss.bind.Converter
 import org.zkoss.bind.ValidationContext
 import org.zkoss.bind.Validator
 import org.zkoss.bind.annotation.AfterCompose
@@ -12,7 +14,8 @@ import org.zkoss.zk.ui.select.Selectors
 import org.zkoss.zk.ui.select.annotation.Wire
 import org.zkoss.zul.Column
 import org.zkoss.zul.Grid
-import org.zkoss.zul.Label
+
+import java.text.SimpleDateFormat
 
 class zkMvvmViewModel{
 
@@ -33,6 +36,10 @@ class zkMvvmViewModel{
     private boolean shouldDisplayInfo = false
     private boolean shouldDisplayPopup = false
     private String message =  "Initial message"
+    private String creationDate = "20000101"
+
+    private Converter dateConverter = new DateFormatConverter()
+
 
     int getIndex() {
         return index
@@ -76,6 +83,22 @@ class zkMvvmViewModel{
 
     void setMessage(String message) {
         this.message = message
+    }
+
+    String getCreationDate() {
+        return creationDate
+    }
+
+    void setCreationDate(String creationDate) {
+        this.creationDate = creationDate
+    }
+
+    Converter getDateConverter() {
+        return dateConverter
+    }
+
+    void setDateConverter(Converter dateConverter) {
+        this.dateConverter = dateConverter
     }
 
     @Command
@@ -147,6 +170,20 @@ class zkMvvmViewModel{
 
         void setDescription(String description) {
             this.description = description
+        }
+    }
+
+
+    static class DateFormatConverter implements Converter{
+
+        Object coerceToUi(Object beanProp, Component component, BindContext ctx) {
+            final String format = (String) ctx.getConverterArg("format")
+            if(format == null) throw new NullPointerException("format attribute not found.")
+            return beanProp == null ? null : new SimpleDateFormat(format).parse(beanProp as String)
+        }
+
+        Object coerceToBean(Object compAttr, Component component, BindContext ctx) {
+            return compAttr
         }
     }
 
