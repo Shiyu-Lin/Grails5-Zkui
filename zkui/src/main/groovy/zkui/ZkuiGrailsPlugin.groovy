@@ -97,8 +97,6 @@ Brief summary/description of the plugin.
         {->
             webManagerInit(WebManagerInit)
             auEngine(ServletRegistrationBean, new DHtmlUpdateServlet(), "/zkau/*")
-            zkResource(ServletRegistrationBean, new DHtmlResourceServlet(), "/zkau/*")
-
             if(manager?.hasGrailsPlugin("hibernate")){
                 GOSIVFilter(FilterRegistrationBean){
                     filter = bean(ZkuiGrailsOpenSessionInViewFilter)
