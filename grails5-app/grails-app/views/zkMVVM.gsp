@@ -194,6 +194,55 @@
     <z:button label="change" onClick="@command('updateNCOValue')"/>
 
 
+    <z:listbox id="src" rows="0" checkmark="true" multiple="true" width="200px">
+        <z:listhead>
+            <z:listheader label="Population"/>
+            <z:listheader label="Percentage"/>
+        </z:listhead>
+        <z:listitem id="a" value="A">
+            <z:listcell label="A. Graduate"/>
+            <z:listcell label="20%"/>
+        </z:listitem>
+        <z:listitem id="b" value="B">
+            <z:listcell label="B. College"/>
+            <z:listcell label="23%"/>
+        </z:listitem>
+        <z:listitem id="c" value="C">
+            <z:listcell label="C. High School"/>
+            <z:listcell label="40%"/>
+        </z:listitem>
+        <z:listitem id="d" value="D">
+            <z:listcell label="D. Others"/>
+            <z:listcell label="17%"/>
+        </z:listitem>
+    </z:listbox>
+
+
+    <z:listbox>
+        <z:listhead>
+            <z:listheader label="name" sort="auto"/>
+            <z:listheader label="gender" sort="auto"/>
+        </z:listhead>
+        <z:listitem>
+            <z:listcell label="John"/>
+            <z:listcell label="MALE"/>
+        </z:listitem>
+        <z:listitem>
+            <z:listcell label="Alan"/>
+            <z:listcell label="MALE"/>
+        </z:listitem>
+        <z:listitem>
+            <z:listcell label="Carl"/>
+            <z:listcell label="MALE"/>
+        </z:listitem>
+        <z:listitem>
+            <z:listcell label="Berasd"/>
+            <z:listcell label="FEMALE"/>
+        </z:listitem>
+    </z:listbox>
+
+
+
 
 </z:window>
 

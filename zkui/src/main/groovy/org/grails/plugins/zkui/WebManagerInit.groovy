@@ -25,6 +25,10 @@ class WebManagerInit implements ServletContextAware, ApplicationContextAware{
             WebManager webmanCreated = new WebManager(servletContext, updateURI)
 
 
+            // Changing default ZK theme to breeze which is probably the one we used for ZK 8.0.1.1
+            Library.setProperty("org.zkoss.theme.preferred", "breeze")
+            println(Library.getProperty("org.zkoss.theme.preferred") + "============================")
+
             println(webmanCreated.getWebApp().getAppName())
 
             // Logging zk WebManager just to confirm it is indeed initialized

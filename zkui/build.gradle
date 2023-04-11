@@ -104,6 +104,10 @@ dependencies {
 	    exclude module: 'sl4j-api'
         exclude module: 'sl4j-jdk14'
 	}
+    implementation ("org.zkoss.theme:breeze:${zkVersion}"){
+        exclude module: 'sl4j-api'
+        exclude module: 'sl4j-jdk14'
+    }
     implementation ("org.zkoss.zk:zkex:${zkVersion}"){
 	    exclude module: 'sl4j-api'
         exclude module: 'sl4j-jdk14'
