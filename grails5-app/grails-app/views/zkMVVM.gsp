@@ -11,7 +11,16 @@
 <head>
     <title>ZK MVVM testing</title>
     <z:resources/>
+
+    <style>
+    .red{
+        color: red;
+        font-style: oblique;
+    }
+    </style>
 </head>
+
+
 
 <body>
 
@@ -241,7 +250,13 @@
         </z:listitem>
     </z:listbox>
 
-
+    <z:label value="some new label"/>
+    <z:space/>
+    <z:textbox sclass="red" value="@bind(vm.textBoxContent)" onChange="@command('onContentChange')"/>
+    <z:space/>
+    <z:label value="@bind(vm.textBoxContent)"/>
+    <z:space/>
+    <z:textbox onChange="@command('onSomeChange')"/>
 
 
 </z:window>

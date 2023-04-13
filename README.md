@@ -76,7 +76,7 @@ project is Grails 2.2.4 and ZK 6.5.4.
     "Execution failed for task ':zkui:jar'. > Unable to delete file '...\zkui\build\libs\zkui-0.1-plain.jar'". What I did was to remove "build" folder from zkui and rerun, this should resolve
     the issue.
 
-    Something related to message code "....message code not found, etc.", please refer to: https://github.com/groovyzk/grailszk/issues/7
+    Something related to message code "....message code not found, etc.", please refer to: https://github.com/groovyzk/grailszk/issues/7 and https://forum.zkoss.org/question/113310/spring-boot-starter-zk-951-issue-on-reloadreboot/
 
 
 

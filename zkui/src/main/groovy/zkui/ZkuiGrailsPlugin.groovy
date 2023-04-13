@@ -26,6 +26,7 @@ import org.zkoss.zk.ui.Execution
 import org.zkoss.zk.ui.Executions
 import org.zkoss.zk.ui.Page
 import org.zkoss.zk.ui.Session
+import org.zkoss.zk.ui.http.DHtmlLayoutServlet
 import org.zkoss.zk.ui.http.HttpSessionListener
 import org.zkoss.zk.ui.select.Selectors
 import org.zkoss.zul.Checkbox
@@ -97,6 +98,10 @@ Brief summary/description of the plugin.
         {->
             webManagerInit(WebManagerInit)
             auEngine(ServletRegistrationBean, new DHtmlUpdateServlet(), "/zkau/*")
+//            zkLoader(ServletRegistrationBean, new DHtmlLayoutServlet(), "*.gsp"){
+//                initParameters = [ "update-uri": "/zkau", "compress": "false" ]
+//                loadOnStartup = 0
+//            }
             if(manager?.hasGrailsPlugin("hibernate")){
                 GOSIVFilter(FilterRegistrationBean){
                     filter = bean(ZkuiGrailsOpenSessionInViewFilter)

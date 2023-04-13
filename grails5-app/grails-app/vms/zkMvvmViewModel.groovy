@@ -51,6 +51,7 @@ class zkMvvmViewModel extends parentViewModel{
     private Book currentBook = new Book("556677", null, null, 0.00)
     private Book anotherBook = new Book("778899", "Another book", "Someone2", 29.99)
     private NeverChange neverChangeObject = new NeverChange("never change object", 99.98)
+    private String textBoxContent
 
 
     @Init(superclass = true)
@@ -155,6 +156,14 @@ class zkMvvmViewModel extends parentViewModel{
         this.neverChangeObject = neverChangeObject
     }
 
+    String getTextBoxContent() {
+        return textBoxContent
+    }
+
+    void setTextBoxContent(String textBoxContent) {
+        this.textBoxContent = textBoxContent
+    }
+
     String concat(String str1, String str2){
         return str1 + " " + str2
     }
@@ -217,6 +226,22 @@ class zkMvvmViewModel extends parentViewModel{
     @NotifyChange("neverChangeObject")
     void updateNCOValue(){
         neverChangeObject.setValue(123.334)
+    }
+
+    @Command
+    @NotifyChange("textBoxContent")
+    void onContentChange(){
+        println(textBoxContent + "============")
+    }
+
+    @Command
+    void onSomeChange(){
+        println("something changed")
+        println("this should print something")
+    }
+
+    void newMethod(){
+        println("somethisnda")
     }
 
     Validator getRangeValidator(){
