@@ -55,6 +55,11 @@ project is Grails 2.2.4 and ZK 6.5.4.
     </body>
     </html>
 
+### 5. Changing Default ZK Theme
+    
+    ZK framework changed their default theme to ice-blue since ZK 9, if you like the old ZK default theme (breeze) or any other ZK theme which you want to use, you could first by include the 
+    theme in build.gradle in zkui directory then you could set it in WebManagerInit.groovy by "Library.setProperty("org.zkoss.theme.preferred", "theThemeYouWant")".
+
 ## Plugin Configuration File 
     The core of the plugin is ZkuiGrailsPlugin.groovy file in zkui/src/main/groovy/zkui, it is quite hard to understand what exactly it is doing, but in "doWithSpring()"
     method you would see servlets that are required by ZK and some customized handlers are initialized.
@@ -71,7 +76,7 @@ project is Grails 2.2.4 and ZK 6.5.4.
     "Execution failed for task ':zkui:jar'. > Unable to delete file '...\zkui\build\libs\zkui-0.1-plain.jar'". What I did was to remove "build" folder from zkui and rerun, this should resolve
     the issue.
 
-    Something related to message code "....message code not found, etc.", seems to appear randomly, could not figure out why it happens yet.
+    Something related to message code "....message code not found, etc.", please refer to: https://github.com/groovyzk/grailszk/issues/7 and https://forum.zkoss.org/question/113310/spring-boot-starter-zk-951-issue-on-reloadreboot/
 
 
 

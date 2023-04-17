@@ -11,7 +11,16 @@
 <head>
     <title>ZK MVVM testing</title>
     <z:resources/>
+
+    <style>
+    .red{
+        color: red;
+        font-style: oblique;
+    }
+    </style>
 </head>
+
+
 
 <body>
 
@@ -79,9 +88,9 @@
         </z:columns>
         <z:template name="model1">
             <row>
-                <label value="@bind(each.name)"/>
+                <label value="@bind(vm.concat(each.name, '!!!!!'))"/>
                 <label value="@bind(each.description)"/>
-                <button label="popup" onClick="@command('popup')"/>
+                <button label="popup" onClick="@command('popup') @global-command('refresh')"/>
             </row>
         </z:template>
 
@@ -121,7 +130,7 @@
         <z:template name="model" var="item">
             <row>
                 <label value="@bind(itemStatus.index)"/>
-                <label value="@bind(item.name)"/>
+                <label value="@load(item.name eq 'Item 1' ? 'Number 1 Item' : item.name, after={'showIndex'})"/>
                 <hbox>
                     <button label="Index" onClick="@command('showIndex', index=itemStatus.index)"/>
                     <button label="Delete" onClick="@command('delete', item=item)"/>
@@ -131,6 +140,123 @@
     </z:grid>
 
     <z:label value="@bind(vm.message)"/>
+
+    <z:space/>
+
+    <z:label value="@load(vm.creationDate) @converter(vm.dateConverter, format='yyyymmdd')"/>
+
+    <z:label value="@load(vm.getMessage())"/>
+    <z:space/>
+    <z:label value="@load(('Hi, ' += vm.creationDate += ' date'))"/>
+    <z:space/>
+    <z:label value="@load(([1,2,3,4,5].stream().sum()))"/>
+    <z:space/>
+    <z:label visible="@bind((vm.shouldDisplayPopup eq true))" value="should be visible"/>
+    <z:space/>
+    <z:button label="button" onClick="@command(empty vm.selection ? 'incrementIndexByTen' : null)"/>
+    <z:space/>
+    <z:button label="default" onClick="@command('someCommand')"/>
+
+
+    <z:groupbox form="@id('fx') @load(vm.currentBook) @save(vm.currentBook, before='save')">
+        <z:grid hflex="true" >
+            <z:columns>
+                <z:column/>
+                <z:column/>
+            </z:columns>
+            <z:rows>
+                <z:row>
+                    Id <z:label value="@bind(fx.id)"/>
+                </z:row>
+                <z:row>
+                    Name <z:textbox value="@bind(fx.name)"/>
+                </z:row>
+                <z:row>
+                    Author <z:textbox value="@bind(fx.author) "/>
+                </z:row>
+                <z:row>
+                    Price <z:doublebox value="@bind(fx.price)" format="###,##0.00" />
+                </z:row>
+                <z:row>
+                    <z:button label="submit" onClick="@command('save')" disabled="@load(not fxStatus.dirty)"/>
+                </z:row>
+            </z:rows>
+        </z:grid>
+    </z:groupbox>
+    <z:button label="Change Book ID" onClick="@command('updateBookId')"/>
+    <z:space/>
+
+    <z:vlayout book="@ref(vm.anotherBook)">
+        <z:hlayout>
+            Name: <z:textbox value="@bind(book.name)" />
+        </z:hlayout>
+        <z:hlayout>
+            Author: <z:textbox value="@bind(book.author)" />
+        </z:hlayout>
+    </z:vlayout>
+
+
+    <z:label value="@load(vm.neverChangeObject.message)"/>
+    <z:space/>
+    <z:label value="@load(vm.neverChangeObject.value)"/>
+    <z:space/>
+    <z:button label="change" onClick="@command('updateNCOValue')"/>
+
+
+    <z:listbox id="src" rows="0" checkmark="true" multiple="true" width="200px">
+        <z:listhead>
+            <z:listheader label="Population"/>
+            <z:listheader label="Percentage"/>
+        </z:listhead>
+        <z:listitem id="a" value="A">
+            <z:listcell label="A. Graduate"/>
+            <z:listcell label="20%"/>
+        </z:listitem>
+        <z:listitem id="b" value="B">
+            <z:listcell label="B. College"/>
+            <z:listcell label="23%"/>
+        </z:listitem>
+        <z:listitem id="c" value="C">
+            <z:listcell label="C. High School"/>
+            <z:listcell label="40%"/>
+        </z:listitem>
+        <z:listitem id="d" value="D">
+            <z:listcell label="D. Others"/>
+            <z:listcell label="17%"/>
+        </z:listitem>
+    </z:listbox>
+
+
+    <z:listbox>
+        <z:listhead>
+            <z:listheader label="name" sort="auto"/>
+            <z:listheader label="gender" sort="auto"/>
+        </z:listhead>
+        <z:listitem>
+            <z:listcell label="John"/>
+            <z:listcell label="MALE"/>
+        </z:listitem>
+        <z:listitem>
+            <z:listcell label="Alan"/>
+            <z:listcell label="MALE"/>
+        </z:listitem>
+        <z:listitem>
+            <z:listcell label="Carl"/>
+            <z:listcell label="MALE"/>
+        </z:listitem>
+        <z:listitem>
+            <z:listcell label="Berasd"/>
+            <z:listcell label="FEMALE"/>
+        </z:listitem>
+    </z:listbox>
+
+    <z:label value="some new label"/>
+    <z:space/>
+    <z:textbox sclass="red" value="@bind(vm.textBoxContent)" onChange="@command('onContentChange')"/>
+    <z:space/>
+    <z:label value="@bind(vm.textBoxContent)"/>
+    <z:space/>
+    <z:textbox onChange="@command('onSomeChange')"/>
 
 
 </z:window>

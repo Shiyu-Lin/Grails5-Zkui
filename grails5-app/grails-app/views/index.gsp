@@ -12,6 +12,195 @@
 
 <z:window title="Grid Demo" border="normal">
 
+    <z:vbox>
+        <z:paging totalSize="100" pageSize="20"/>
+    </z:vbox>
+
+    <z:grid width="600px">
+        <z:frozen columns="2"/>
+        <z:columns>
+            <z:column width="50px">ID</z:column>
+            <z:column width="50px">Priority</z:column>
+            <z:column width="50px">Status</z:column>
+            <z:column width="150px">Summary</z:column>
+            <z:column width="250px">Detail</z:column>
+            <z:column width="100px">Group</z:column>
+            <z:column width="50px">Assign</z:column>
+        </z:columns>
+        <z:rows>
+            <z:row>
+                <z:cell>0001</z:cell>
+                <z:cell>1</z:cell>
+                <z:cell>closed</z:cell>
+                <z:cell>Fix login issue</z:cell>
+                <z:cell>Login does not work at all</z:cell>
+                <z:cell>Account</z:cell>
+                <z:cell>Bob</z:cell>
+            </z:row>
+            <z:row>
+                <z:cell>0002</z:cell>
+                <z:cell>3</z:cell>
+                <z:cell>open</z:cell>
+                <z:cell>Button style broken</z:cell>
+                <z:cell>Check main.css</z:cell>
+                <z:cell>Styling</z:cell>
+                <z:cell>Alice</z:cell>
+            </z:row>
+            <z:row>
+                <z:cell>0003</z:cell>
+                <z:cell>2</z:cell>
+                <z:cell>open</z:cell>
+                <z:cell>Client search result</z:cell>
+                <z:cell>Search service returns incomplete result</z:cell>
+                <z:cell>Service</z:cell>
+                <z:cell>Bob</z:cell>
+            </z:row>
+        </z:rows>
+    </z:grid>
+
+    <z:grid>
+        <z:columns>
+            <z:column label="A"/>
+            <z:column label="B"/>
+            <z:column label="C"/>
+            <z:column label="D"/>
+        </z:columns>
+        <z:rows>
+            <z:row>
+                <z:cell rowspan="4" align="center" valign="bottom">
+                    <z:label value="item 1"/>
+                </z:cell>
+                <z:cell colspan="3">
+                    <z:label value="item 2"/>
+                </z:cell>
+            </z:row>
+            <z:row>
+                <z:cell colspan="2" align="center">
+                    <z:label value="item 3"/>
+                </z:cell>
+                <z:label value="item 4"/>
+            </z:row>
+            <z:row>
+                <z:label value="item 5"/>
+                <z:label value="item 6"/>
+                <z:label value="item 7"/>
+            </z:row>
+            <z:row>
+                <z:label value="item 8"/>
+                <z:label value="item 9"/>
+                <z:label value="item 10"/>
+            </z:row>
+        </z:rows>
+    </z:grid>
+    <z:space/>
+    <z:window title="hbox" border="normal" width="320px">
+        <z:hbox width="300px" pack="center">
+            <z:cell hflex="1" align="center">
+                <z:label value="item 1"/>
+            </z:cell>
+            <z:cell hflex="1" align="center">
+                <z:label value="item 2"/>
+            </z:cell>
+        </z:hbox>
+    </z:window>
+
+    <z:grid>
+        <z:auxhead>
+            <z:auxheader label="H1'07" colspan="6"/>
+            <z:auxheader label="H2'07" colspan="6"/>
+        </z:auxhead>
+        <z:auxhead>
+            <z:auxheader label="Q1" colspan="3"/>
+            <z:auxheader label="Q2" colspan="3"/>
+            <z:auxheader label="Q3" colspan="3"/>
+            <z:auxheader label="Q4" colspan="3"/>
+        </z:auxhead>
+        <z:columns>
+            <z:column label="Jan"/>
+            <z:column label="Feb"/>
+            <z:column label="Mar"/>
+            <z:column label="Apr"/>
+            <z:column label="May"/>
+            <z:column label="Jun"/>
+            <z:column label="Jul"/>
+            <z:column label="Aug"/>
+            <z:column label="Sep"/>
+            <z:column label="Oct"/>
+            <z:column label="Nov"/>
+            <z:column label="Dec"/>
+        </z:columns>
+        <z:rows>
+            <z:row>
+                <z:label value="1,000"/>
+                <z:label value="1,100"/>
+                <z:label value="1,200"/>
+                <z:label value="1,300"/>
+                <z:label value="1,400"/>
+                <z:label value="1,500"/>
+                <z:label value="1,600"/>
+                <z:label value="1,700"/>
+                <z:label value="1,800"/>
+                <z:label value="1,900"/>
+                <z:label value="2,000"/>
+                <z:label value="2,100"/>
+            </z:row>
+        </z:rows>
+    </z:grid>
+
+
+
+    <z:grid width="300px">
+        <z:columns>
+            <z:column label="Type" width="50px"/>
+            <z:column label="Content"/>
+        </z:columns>
+        <z:rows>
+            <z:row>
+                <z:label value="File:"/>
+                <z:textbox width="99%"/>
+            </z:row>
+            <z:row>
+                <z:label value="Type:"/>
+                <z:hbox>
+                    <z:listbox rows="1" mold="select">
+                        <z:listitem label="Java Files,(*.java)"/>
+                        <z:listitem label="All Files,(*.*)"/>
+                    </z:listbox>
+                    <z:button label="Browse..."/>
+                </z:hbox>
+            </z:row>
+        </z:rows>
+        <z:foot>
+            <z:footer>footer1</z:footer>
+            <z:footer>footer2</z:footer>
+        </z:foot>
+    </z:grid>
+
+    <z:window>
+        <z:label id="now"/>
+        <z:timer id="timer" delay="1000" repeats="true" onTimer="now.setValue(new Date().toString())"/>
+    </z:window>
+
+
+    <z:window id="win1">
+        <z:button label="change color" onClick="Clients.evalJavaScript('myfunc()');"/>
+    </z:window>
+    <z:script type="text/javascript">
+        function myfunc() {
+            jq("$win1").css("backgroundColor", "red");
+        }
+    </z:script>
+
+    <z:box>
+        <z:fileupload label="Upload"/>
+    </z:box>
+
+    <z:imagemap src="/assets/apple-touch-icon.png" onClick="alert(event.area)">
+        <z:area id="First" coords="0, 0, 100, 100"/>
+        <z:area id="Second" shape="circle" coords="200, 200, 100"/>
+    </z:imagemap>
+
+
     <z:a href="http://www.zkoss.org" label="Visit ZK!"/>
     <z:div align="left" width="300px">
         <z:doublebox/>
